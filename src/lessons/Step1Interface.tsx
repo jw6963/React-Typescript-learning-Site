@@ -303,9 +303,8 @@ console.log("학년:", student.grade);`}
         <CodePlayground
           title="연습 문제: 직접 풀어보세요!"
           defaultCode={`// TODO 1: Book 인터페이스 만들기
-interface Book {
-  // title, author, price, isbn(optional) 추가
-}
+// title, author, price, isbn(optional) 속성을 가진 Book 인터페이스를 만드세요
+
 
 // TODO 2: Person을 확장하여 Employee 만들기
 interface Person {
@@ -313,16 +312,14 @@ interface Person {
   age: number;
 }
 
-interface Employee extends Person {
-  // employeeId, department 추가
-}
+// Person을 확장하고 employeeId, department 속성을 추가하세요
+
 
 // TODO 3: readonly Config 만들기
-interface Config {
-  // apiUrl, timeout을 readonly로
-}
+// apiUrl, timeout을 readonly 속성으로 가진 Config 인터페이스를 만드세요
 
-// 테스트
+
+// 테스트 코드 (위의 인터페이스들을 완성하면 에러가 사라집니다)
 const book: Book = {
   title: "TypeScript 입문",
   author: "홍길동",
@@ -336,8 +333,14 @@ const employee: Employee = {
   department: "개발팀"
 };
 
+const config: Config = {
+  apiUrl: "https://api.example.com",
+  timeout: 3000
+};
+
 console.log("책:", book);
-console.log("직원:", employee);`}
+console.log("직원:", employee);
+console.log("설정:", config);`}
           solution={`// TODO 1: Book 인터페이스 만들기
 interface Book {
   title: string;

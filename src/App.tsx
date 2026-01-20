@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Layout, Menu, Typography } from 'antd';
 import { BookOutlined, CodeOutlined, RocketOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
@@ -22,6 +22,47 @@ type MenuItem = Required<MenuProps>['items'][number];
 function App() {
   const [selectedLesson, setSelectedLesson] = useState<string>('welcome');
   const [collapsed, setCollapsed] = useState<boolean>(false);
+
+  // Monaco Editor 전역 설정 (한 번만 실행)
+  useEffect(() => {
+    const setupMonaco = () => {
+      const monaco = (window as any).monaco;
+      if (monaco) {
+        // TypeScript 컴파일러 옵션 설정
+        monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+          target: monaco.languages.typescript.ScriptTarget.ES2020,
+          lib: ['es2020', 'dom'],
+          moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+          module: monaco.languages.typescript.ModuleKind.ESNext,
+          strict: true,
+          noImplicitAny: true,
+          strictNullChecks: true,
+          strictFunctionTypes: true,
+          strictPropertyInitialization: true,
+          noImplicitThis: true,
+          alwaysStrict: true,
+          esModuleInterop: true,
+          allowSyntheticDefaultImports: true,
+        });
+
+        // 진단 옵션 설정
+        monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+          noSemanticValidation: false,
+          noSyntaxValidation: false,
+        });
+      }
+    };
+
+    // Monaco가 로드될 때까지 대기
+    const checkMonaco = setInterval(() => {
+      if ((window as any).monaco) {
+        setupMonaco();
+        clearInterval(checkMonaco);
+      }
+    }, 100);
+
+    return () => clearInterval(checkMonaco);
+  }, []);
 
   const menuItems: MenuItem[] = [
     {
