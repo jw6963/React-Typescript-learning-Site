@@ -3,6 +3,8 @@
 // ========================================
 
 import React, { useState, useEffect, useRef, useContext, useReducer } from 'react';
+import { Divider } from 'antd';
+import { CodePlayground } from '../components/CodePlayground';
 
 // ========================================
 // 1. useState (복습 + 심화)
@@ -317,6 +319,215 @@ export default function Step4HooksTypescript() {
         </ol>
         <p>파일 위치: <code>src/lessons/step4-hooks-typescript.tsx</code></p>
       </section>
+
+      <Divider orientation="left">💻 Hooks 타입 연습</Divider>
+
+      <CodePlayground
+        title="예제 1: useState 타입 정의"
+        defaultCode={`// useState 타입 정의하기
+// 기본 타입
+let count: number = 0;
+let name: string = "홍길동";
+let isActive: boolean = true;
+
+console.log("count:", count);
+console.log("name:", name);
+console.log("isActive:", isActive);
+
+// 객체 타입
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+let user: User = {
+  id: 1,
+  name: "김철수",
+  email: "kim@example.com"
+};
+
+console.log("user:", user);
+
+// 배열 타입
+let items: string[] = ["사과", "바나나", "오렌지"];
+console.log("items:", items);`}
+      />
+
+      <CodePlayground
+        title="예제 2: useReducer 타입 정의"
+        defaultCode={`// Reducer State와 Action 타입 정의
+interface CounterState {
+  count: number;
+  lastAction: string;
+}
+
+type CounterAction =
+  | { type: 'INCREMENT' }
+  | { type: 'DECREMENT' }
+  | { type: 'RESET' }
+  | { type: 'SET'; payload: number };
+
+// Reducer 함수
+function counterReducer(
+  state: CounterState,
+  action: CounterAction
+): CounterState {
+  switch (action.type) {
+    case 'INCREMENT':
+      return {
+        count: state.count + 1,
+        lastAction: 'INCREMENT'
+      };
+    case 'DECREMENT':
+      return {
+        count: state.count - 1,
+        lastAction: 'DECREMENT'
+      };
+    case 'RESET':
+      return {
+        count: 0,
+        lastAction: 'RESET'
+      };
+    case 'SET':
+      return {
+        count: action.payload,
+        lastAction: 'SET'
+      };
+    default:
+      return state;
+  }
+}
+
+// 테스트
+let state: CounterState = { count: 0, lastAction: 'INIT' };
+
+state = counterReducer(state, { type: 'INCREMENT' });
+console.log("INCREMENT:", state);
+
+state = counterReducer(state, { type: 'SET', payload: 100 });
+console.log("SET to 100:", state);
+
+state = counterReducer(state, { type: 'RESET' });
+console.log("RESET:", state);`}
+        height="450px"
+      />
+
+      <CodePlayground
+        title="예제 3: Custom Hook 타입 정의"
+        defaultCode={`// Custom Hook의 반환 타입 정의
+interface UseFetchResult<T> {
+  data: T | null;
+  loading: boolean;
+  error: Error | null;
+}
+
+// Hook 시뮬레이션
+function createUseFetchResult<T>(data: T): UseFetchResult<T> {
+  return {
+    data: data,
+    loading: false,
+    error: null
+  };
+}
+
+// 사용 예시
+interface Post {
+  id: number;
+  title: string;
+  body: string;
+}
+
+const result: UseFetchResult<Post> = createUseFetchResult({
+  id: 1,
+  title: "첫 번째 글",
+  body: "내용입니다"
+});
+
+console.log("Fetch result:", result);
+console.log("Data:", result.data);
+console.log("Loading:", result.loading);
+
+// 배열 타입으로도 사용 가능
+const listResult: UseFetchResult<Post[]> = createUseFetchResult([
+  { id: 1, title: "글1", body: "내용1" },
+  { id: 2, title: "글2", body: "내용2" }
+]);
+
+console.log("List result:", listResult);
+console.log("Posts count:", listResult.data?.length);`}
+        height="450px"
+      />
+
+      <CodePlayground
+        title="연습 문제: Hooks 타입 정의하기"
+        defaultCode={`// TODO 1: useToggle Hook 타입 정의
+// [boolean, () => void] 형태의 반환 타입
+type UseToggleReturn = any;  // 여기에 코드 작성
+
+// TODO 2: Form State와 Action 타입 정의
+interface FormState {
+  // name, email, message 필드 추가
+}
+
+type FormAction = any;  // UPDATE_FIELD, RESET 액션 추가
+
+// TODO 3: useLocalStorage 반환 타입 정의
+type UseLocalStorageReturn<T> = any;  // [T, (value: T) => void] 형태
+
+// 테스트
+const toggleReturn: UseToggleReturn = [true, () => console.log("toggle")];
+console.log("Toggle state:", toggleReturn[0]);
+
+const formState: FormState = {
+  name: "홍길동",
+  email: "hong@example.com",
+  message: "안녕하세요"
+};
+console.log("Form state:", formState);
+
+const storageReturn: UseLocalStorageReturn<string> = [
+  "저장된 값",
+  (val) => console.log("Save:", val)
+];
+console.log("Stored value:", storageReturn[0]);`}
+        solution={`// TODO 1: useToggle Hook 타입 정의
+type UseToggleReturn = [boolean, () => void];
+
+// TODO 2: Form State와 Action 타입 정의
+interface FormState {
+  name: string;
+  email: string;
+  message: string;
+}
+
+type FormAction =
+  | { type: 'UPDATE_FIELD'; field: keyof FormState; value: string }
+  | { type: 'RESET' };
+
+// TODO 3: useLocalStorage 반환 타입 정의
+type UseLocalStorageReturn<T> = [T, (value: T) => void];
+
+// 테스트
+const toggleReturn: UseToggleReturn = [true, () => console.log("toggle")];
+console.log("Toggle state:", toggleReturn[0]);
+toggleReturn[1](); // toggle 함수 호출
+
+const formState: FormState = {
+  name: "홍길동",
+  email: "hong@example.com",
+  message: "안녕하세요"
+};
+console.log("Form state:", formState);
+
+const storageReturn: UseLocalStorageReturn<string> = [
+  "저장된 값",
+  (val) => console.log("Save:", val)
+];
+console.log("Stored value:", storageReturn[0]);
+storageReturn[1]("새로운 값"); // 저장 함수 호출`}
+        height="500px"
+      />
     </div>
   );
 }

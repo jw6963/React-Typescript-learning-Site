@@ -3,6 +3,8 @@
 // ========================================
 
 import React, { useState, useReducer } from 'react';
+import { Divider } from 'antd';
+import { CodePlayground } from '../components/CodePlayground';
 
 // ========================================
 // 1. 타입 정의
@@ -210,23 +212,233 @@ function TodoApp() {
   );
 }
 
-export default TodoApp;
-
 // ========================================
-// 🎯 개선 과제
+// 학습용 메인 컴포넌트
 // ========================================
 
-// TODO 1: localStorage에 저장/불러오기 기능 추가
-// useEffect로 todos가 변경될 때마다 저장
+export default function Step5ProjectTodo() {
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>🚀 Step 5: Todo 앱 프로젝트</h1>
 
-// TODO 2: 수정 기능 추가
-// EDIT_TODO 액션과 수정 모드 UI
+      <section style={{ marginBottom: '40px' }}>
+        <h2>실행 예제</h2>
+        <TodoApp />
+      </section>
 
-// TODO 3: 정렬 기능
-// 생성일, 이름순 정렬
+      <Divider orientation="left">💻 Todo 타입 연습</Divider>
 
-// TODO 4: 카테고리/태그 기능
-// Todo에 category 필드 추가
+      <CodePlayground
+        title="예제 1: Todo 타입 정의"
+        defaultCode={`// Todo 인터페이스
+interface Todo {
+  id: number;
+  text: string;
+  completed: boolean;
+  createdAt: Date;
+}
 
-// TODO 5: API 연동
-// fetch로 서버에서 데이터 가져오기
+// Todo 생성 함수
+function createTodo(text: string): Todo {
+  return {
+    id: Date.now(),
+    text: text,
+    completed: false,
+    createdAt: new Date()
+  };
+}
+
+// Todo 목록
+const todos: Todo[] = [
+  createTodo("TypeScript 공부하기"),
+  createTodo("React 프로젝트 만들기"),
+  createTodo("포트폴리오 작성하기")
+];
+
+console.log("Todo 목록:", todos);
+console.log("첫 번째 Todo:", todos[0]);
+
+// Todo 토글
+function toggleTodo(todo: Todo): Todo {
+  return { ...todo, completed: !todo.completed };
+}
+
+const toggled = toggleTodo(todos[0]);
+console.log("토글된 Todo:", toggled);`}
+        height="400px"
+      />
+
+      <CodePlayground
+        title="예제 2: Reducer 타입 정의"
+        defaultCode={`// State 타입
+interface TodoState {
+  todos: Array<{ id: number; text: string; completed: boolean }>;
+  filter: 'all' | 'active' | 'completed';
+}
+
+// Action 타입
+type TodoAction =
+  | { type: 'ADD_TODO'; payload: string }
+  | { type: 'TOGGLE_TODO'; payload: number }
+  | { type: 'DELETE_TODO'; payload: number }
+  | { type: 'SET_FILTER'; payload: 'all' | 'active' | 'completed' };
+
+// Reducer 함수
+function todoReducer(state: TodoState, action: TodoAction): TodoState {
+  switch (action.type) {
+    case 'ADD_TODO':
+      return {
+        ...state,
+        todos: [
+          ...state.todos,
+          {
+            id: Date.now(),
+            text: action.payload,
+            completed: false
+          }
+        ]
+      };
+    case 'TOGGLE_TODO':
+      return {
+        ...state,
+        todos: state.todos.map(todo =>
+          todo.id === action.payload
+            ? { ...todo, completed: !todo.completed }
+            : todo
+        )
+      };
+    case 'DELETE_TODO':
+      return {
+        ...state,
+        todos: state.todos.filter(todo => todo.id !== action.payload)
+      };
+    case 'SET_FILTER':
+      return {
+        ...state,
+        filter: action.payload
+      };
+    default:
+      return state;
+  }
+}
+
+// 테스트
+let state: TodoState = {
+  todos: [],
+  filter: 'all'
+};
+
+state = todoReducer(state, { type: 'ADD_TODO', payload: '첫 번째 할 일' });
+console.log("ADD_TODO:", state);
+
+state = todoReducer(state, { type: 'ADD_TODO', payload: '두 번째 할 일' });
+console.log("ADD_TODO 2:", state);
+
+state = todoReducer(state, { type: 'TOGGLE_TODO', payload: state.todos[0].id });
+console.log("TOGGLE_TODO:", state);`}
+        height="550px"
+      />
+
+      <CodePlayground
+        title="연습 문제: Todo 기능 구현하기"
+        defaultCode={`// TODO 1: Todo 인터페이스 정의
+interface Todo {
+  // id, text, completed, priority 추가
+  // priority는 'low' | 'medium' | 'high'
+}
+
+// TODO 2: 필터 함수 구현
+function filterTodos(
+  todos: Todo[],
+  filter: 'all' | 'active' | 'completed'
+): Todo[] {
+  // 여기에 코드 작성
+  return [];
+}
+
+// TODO 3: 정렬 함수 구현
+function sortTodosByPriority(todos: Todo[]): Todo[] {
+  // high > medium > low 순으로 정렬
+  // 여기에 코드 작성
+  return [];
+}
+
+// 테스트
+const todos: Todo[] = [
+  { id: 1, text: "긴급 버그 수정", completed: false, priority: 'high' },
+  { id: 2, text: "문서 작성", completed: false, priority: 'low' },
+  { id: 3, text: "코드 리뷰", completed: true, priority: 'medium' }
+];
+
+console.log("전체 Todos:", todos);
+
+const activeTodos = filterTodos(todos, 'active');
+console.log("Active Todos:", activeTodos);
+
+const sortedTodos = sortTodosByPriority(todos);
+console.log("Sorted Todos:", sortedTodos);`}
+        solution={`// TODO 1: Todo 인터페이스 정의
+interface Todo {
+  id: number;
+  text: string;
+  completed: boolean;
+  priority: 'low' | 'medium' | 'high';
+}
+
+// TODO 2: 필터 함수 구현
+function filterTodos(
+  todos: Todo[],
+  filter: 'all' | 'active' | 'completed'
+): Todo[] {
+  if (filter === 'active') {
+    return todos.filter(todo => !todo.completed);
+  }
+  if (filter === 'completed') {
+    return todos.filter(todo => todo.completed);
+  }
+  return todos;
+}
+
+// TODO 3: 정렬 함수 구현
+function sortTodosByPriority(todos: Todo[]): Todo[] {
+  const priorityOrder = { high: 3, medium: 2, low: 1 };
+  return [...todos].sort((a, b) =>
+    priorityOrder[b.priority] - priorityOrder[a.priority]
+  );
+}
+
+// 테스트
+const todos: Todo[] = [
+  { id: 1, text: "긴급 버그 수정", completed: false, priority: 'high' },
+  { id: 2, text: "문서 작성", completed: false, priority: 'low' },
+  { id: 3, text: "코드 리뷰", completed: true, priority: 'medium' }
+];
+
+console.log("전체 Todos:", todos);
+
+const activeTodos = filterTodos(todos, 'active');
+console.log("Active Todos:", activeTodos);
+
+const completedTodos = filterTodos(todos, 'completed');
+console.log("Completed Todos:", completedTodos);
+
+const sortedTodos = sortTodosByPriority(todos);
+console.log("Sorted Todos (high to low):", sortedTodos);`}
+        height="550px"
+      />
+
+      <section className="exercise-section" style={{ marginTop: '40px' }}>
+        <h2>🎯 개선 과제</h2>
+        <p>위의 Todo 앱에 다음 기능을 추가해보세요:</p>
+        <ol>
+          <li><strong>localStorage 저장</strong>: useEffect로 todos가 변경될 때마다 저장</li>
+          <li><strong>수정 기능</strong>: EDIT_TODO 액션과 수정 모드 UI</li>
+          <li><strong>정렬 기능</strong>: 생성일, 이름순 정렬</li>
+          <li><strong>카테고리/태그</strong>: Todo에 category 필드 추가</li>
+          <li><strong>API 연동</strong>: fetch로 서버에서 데이터 가져오기</li>
+        </ol>
+        <p>파일 위치: <code>src/lessons/step5-project-todo.tsx</code></p>
+      </section>
+    </div>
+  );
+}

@@ -16,6 +16,7 @@ export function CodePlayground({ title, defaultCode, solution, height = '300px' 
   const [output, setOutput] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [showingSolution, setShowingSolution] = useState(false);
+  const [userEditedCode, setUserEditedCode] = useState<string>(defaultCode); // 사용자가 편집한 코드 저장
 
   const handleRun = () => {
     setOutput('');
@@ -62,6 +63,7 @@ export function CodePlayground({ title, defaultCode, solution, height = '300px' 
 
   const handleReset = () => {
     setCode(defaultCode);
+    setUserEditedCode(defaultCode);
     setOutput('');
     setError('');
     setShowingSolution(false);
@@ -69,12 +71,13 @@ export function CodePlayground({ title, defaultCode, solution, height = '300px' 
 
   const handleToggleSolution = () => {
     if (showingSolution) {
-      // 정답 숨기기 - 원래 코드로
-      setCode(defaultCode);
+      // 정답 숨기기 - 사용자가 편집했던 코드로 복원
+      setCode(userEditedCode);
       setShowingSolution(false);
     } else {
-      // 정답 보기
+      // 정답 보기 - 현재 코드를 저장한 후 정답 표시
       if (solution) {
+        setUserEditedCode(code); // 현재 편집 중인 코드 저장
         setCode(solution);
         setShowingSolution(true);
       }
@@ -128,7 +131,14 @@ export function CodePlayground({ title, defaultCode, solution, height = '300px' 
             height={height}
             defaultLanguage="typescript"
             value={code}
-            onChange={(value) => setCode(value || '')}
+            onChange={(value) => {
+              const newCode = value || '';
+              setCode(newCode);
+              // 정답을 보고 있지 않을 때만 사용자 편집 코드 업데이트
+              if (!showingSolution) {
+                setUserEditedCode(newCode);
+              }
+            }}
             theme="vs-light"
             options={{
               minimap: { enabled: false },
