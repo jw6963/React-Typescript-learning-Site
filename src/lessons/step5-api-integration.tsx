@@ -3,6 +3,8 @@
 // ========================================
 
 import React, { useState, useEffect } from 'react';
+import { Divider } from 'antd';
+import { CodePlayground } from '../components/CodePlayground';
 
 // ========================================
 // 1. API 응답 타입 정의
@@ -294,23 +296,247 @@ function ApiApp() {
   );
 }
 
-export default ApiApp;
-
 // ========================================
-// 🎯 연습 과제
+// 학습용 메인 컴포넌트
 // ========================================
 
-// TODO 1: 검색 기능 추가
-// 사용자/게시물을 이름/제목으로 필터링
+export default function Step5ApiIntegration() {
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>🌐 Step 5: API 연동 + 에러 처리</h1>
 
-// TODO 2: 상세보기 모달
-// 게시물 클릭 시 상세 내용 보기
+      <section style={{ marginBottom: '40px' }}>
+        <h2>실행 예제</h2>
+        <ApiApp />
+      </section>
 
-// TODO 3: 무한 스크롤
-// 페이지네이션 대신 스크롤로 자동 로드
+      <Divider orientation="left">💻 API 타입 연습</Divider>
 
-// TODO 4: 에러 바운더리
-// 에러 발생 시 fallback UI 표시
+      <CodePlayground
+        title="예제 1: API 응답 타입 정의"
+        defaultCode={`// API 응답 타입 정의하기
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
 
-// TODO 5: 낙관적 업데이트
-// 삭제/수정 시 즉시 UI 업데이트 후 API 호출
+interface Post {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+}
+
+// Generic API Response 타입
+interface ApiResponse<T> {
+  data: T | null;
+  error: string | null;
+  loading: boolean;
+}
+
+// 사용 예시
+const userResponse: ApiResponse<User> = {
+  data: { id: 1, name: "홍길동", email: "hong@example.com" },
+  error: null,
+  loading: false
+};
+
+console.log("User Response:", userResponse);
+
+const postListResponse: ApiResponse<Post[]> = {
+  data: [
+    { userId: 1, id: 1, title: "첫 번째 글", body: "내용입니다" },
+    { userId: 1, id: 2, title: "두 번째 글", body: "내용입니다" }
+  ],
+  error: null,
+  loading: false
+};
+
+console.log("Post List Response:", postListResponse);
+console.log("Posts count:", postListResponse.data?.length);`}
+        height="450px"
+      />
+
+      <CodePlayground
+        title="예제 2: 에러 처리 타입"
+        defaultCode={`// 에러 처리를 위한 타입 정의
+interface ApiError {
+  message: string;
+  status: number;
+  timestamp?: Date;
+}
+
+// Result 타입 (성공 또는 실패)
+type Result<T> =
+  | { success: true; data: T }
+  | { success: false; error: ApiError };
+
+// 사용 예시 - 성공 케이스
+const successResult: Result<string> = {
+  success: true,
+  data: "데이터 로드 성공!"
+};
+
+console.log("Success:", successResult);
+
+// 실패 케이스
+const errorResult: Result<string> = {
+  success: false,
+  error: {
+    message: "서버 오류",
+    status: 500,
+    timestamp: new Date()
+  }
+};
+
+console.log("Error:", errorResult);
+
+// 타입 가드를 사용한 처리
+function handleResult<T>(result: Result<T>): void {
+  if (result.success) {
+    console.log("데이터:", result.data);
+  } else {
+    console.log("에러:", result.error.message);
+  }
+}
+
+handleResult(successResult);
+handleResult(errorResult);`}
+        height="450px"
+      />
+
+      <CodePlayground
+        title="예제 3: Fetch 함수 타입 정의"
+        defaultCode={`// API 호출 함수의 타입 정의
+interface ApiConfig {
+  baseUrl: string;
+  timeout: number;
+}
+
+const config: ApiConfig = {
+  baseUrl: "https://api.example.com",
+  timeout: 5000
+};
+
+// Generic fetch 함수 타입
+type FetchFunction<T> = (url: string) => Promise<T>;
+
+// 사용 예시 시뮬레이션
+interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+// fetch 함수 시뮬레이션
+const fetchTodos: FetchFunction<Todo[]> = async (url: string) => {
+  // 실제로는 fetch를 호출하지만, 여기서는 시뮬레이션
+  console.log("Fetching from:", url);
+  return [
+    { id: 1, title: "TypeScript 공부", completed: false },
+    { id: 2, title: "React 프로젝트", completed: true }
+  ];
+};
+
+// 실행
+fetchTodos("/todos").then(todos => {
+  console.log("Todos:", todos);
+  console.log("Total:", todos.length);
+});`}
+        height="450px"
+      />
+
+      <CodePlayground
+        title="연습 문제: API Hook 타입 구현하기"
+        defaultCode={`// TODO 1: useFetch Hook 반환 타입 정의
+interface UseFetchResult<T> {
+  // data, loading, error, refetch 필드 추가
+}
+
+// TODO 2: HTTP Method 타입 정의
+type HttpMethod = any; // 'GET' | 'POST' | 'PUT' | 'DELETE'
+
+// TODO 3: API 옵션 타입 정의
+interface ApiOptions {
+  // method, headers, body 필드 추가
+}
+
+// 테스트
+const fetchResult: UseFetchResult<string> = {
+  data: "데이터",
+  loading: false,
+  error: null,
+  refetch: () => console.log("refetch")
+};
+
+console.log("Fetch Result:", fetchResult);
+
+const method: HttpMethod = 'GET';
+console.log("Method:", method);
+
+const options: ApiOptions = {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ title: "새 글" })
+};
+
+console.log("Options:", options);`}
+        solution={`// TODO 1: useFetch Hook 반환 타입 정의
+interface UseFetchResult<T> {
+  data: T | null;
+  loading: boolean;
+  error: Error | null;
+  refetch: () => void;
+}
+
+// TODO 2: HTTP Method 타입 정의
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+
+// TODO 3: API 옵션 타입 정의
+interface ApiOptions {
+  method: HttpMethod;
+  headers?: Record<string, string>;
+  body?: string;
+}
+
+// 테스트
+const fetchResult: UseFetchResult<string> = {
+  data: "데이터",
+  loading: false,
+  error: null,
+  refetch: () => console.log("refetch")
+};
+
+console.log("Fetch Result:", fetchResult);
+console.log("Has data:", fetchResult.data !== null);
+
+const method: HttpMethod = 'GET';
+console.log("Method:", method);
+
+const options: ApiOptions = {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ title: "새 글" })
+};
+
+console.log("Options:", options);
+console.log("Headers:", options.headers);`}
+        height="500px"
+      />
+
+      <section className="exercise-section" style={{ marginTop: '40px' }}>
+        <h2>🎯 개선 과제</h2>
+        <p>위의 API 연동 예제에 다음 기능을 추가해보세요:</p>
+        <ol>
+          <li><strong>검색 기능</strong>: 사용자/게시물을 이름/제목으로 필터링</li>
+          <li><strong>상세보기 모달</strong>: 게시물 클릭 시 상세 내용 보기</li>
+          <li><strong>무한 스크롤</strong>: 페이지네이션 대신 스크롤로 자동 로드</li>
+          <li><strong>에러 바운더리</strong>: 에러 발생 시 fallback UI 표시</li>
+          <li><strong>낙관적 업데이트</strong>: 삭제/수정 시 즉시 UI 업데이트 후 API 호출</li>
+        </ol>
+        <p>파일 위치: <code>src/lessons/step5-api-integration.tsx</code></p>
+      </section>
+    </div>
+  );
+}
