@@ -21,6 +21,7 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 function App() {
   const [selectedLesson, setSelectedLesson] = useState<string>('welcome');
+  const [collapsed, setCollapsed] = useState<boolean>(false);
 
   const menuItems: MenuItem[] = [
     {
@@ -74,54 +75,165 @@ function App() {
         return <Step5ApiIntegration />;
       default:
         return (
-          <div style={{ padding: '24px' }}>
-            <Title level={2}>👋 TypeScript + React 학습 환경에 오신 것을 환영합니다!</Title>
-            <div style={{ marginTop: '24px', fontSize: '16px', lineHeight: '1.8' }}>
-              <p>이 프로젝트는 <strong>ts-learning</strong> 폴더의 학습 자료를 실제 React 환경에서 실행하며 공부할 수 있도록 만들어졌습니다.</p>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            <div
+              style={{
+                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                padding: '48px 40px',
+                borderRadius: '16px',
+                marginBottom: '32px',
+                boxShadow: '0 10px 15px -3px rgb(99 102 241 / 0.2)',
+              }}
+            >
+              <Title level={1} style={{ color: 'white', margin: 0, fontSize: '2.5rem', fontWeight: 700 }}>
+                👋 환영합니다!
+              </Title>
+              <p style={{ color: 'rgba(255,255,255,0.95)', fontSize: '1.125rem', marginTop: '12px', marginBottom: 0 }}>
+                TypeScript + React 학습 환경에 오신 것을 환영합니다
+              </p>
+            </div>
 
-              <Title level={3} style={{ marginTop: '32px' }}>📚 학습 방법</Title>
-              <ol style={{ fontSize: '16px' }}>
-                <li><strong>왼쪽 메뉴에서 단계 선택</strong> - 학습하고 싶은 단계를 클릭하세요</li>
-                <li><strong>화면에서 예제 확인</strong> - 각 단계의 예제들이 실제로 실행되는 것을 확인하세요</li>
-                <li><strong>코드 읽기</strong> - VS Code에서 <code>src/lessons/</code> 폴더의 파일을 열어 코드를 읽으세요</li>
-                <li><strong>코드 수정</strong> - 파일을 수정하면 브라우저에서 자동으로 업데이트됩니다 (Hot Reload)</li>
-                <li><strong>연습 문제 풀기</strong> - 각 파일 하단의 TODO 부분을 채워보세요</li>
-              </ol>
+            <div style={{ fontSize: '16px', lineHeight: '1.8' }}>
+              <div
+                style={{
+                  padding: '32px',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+                  borderRadius: '12px',
+                  marginBottom: '24px',
+                  border: '1px solid #e5e7eb',
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)',
+                }}
+              >
+                <p style={{ fontSize: '1.05rem', color: '#374151', margin: 0 }}>
+                  이 프로젝트는 <strong style={{ color: '#6366f1' }}>ts-learning</strong> 폴더의 학습 자료를 실제 React 환경에서 실행하며 공부할 수 있도록 만들어졌습니다.
+                </p>
+              </div>
 
-              <Title level={3} style={{ marginTop: '32px' }}>🎓 추천 학습 순서</Title>
-              <div style={{ padding: '16px', background: '#f0f5ff', borderRadius: '8px', marginTop: '16px' }}>
-                <p><strong>1단계: TypeScript 기초</strong></p>
-                <ul>
-                  <li>Step 1-1: 기본 타입 (string, number, boolean, array, object)</li>
-                  <li>Step 1-2: Interface (객체 구조 정의)</li>
-                  <li>Step 1-3: Type Alias (Union, Intersection)</li>
-                  <li>Step 3: 고급 타입 (Generics, Utility Types)</li>
-                </ul>
+              <div
+                style={{
+                  padding: '32px',
+                  background: 'white',
+                  borderRadius: '12px',
+                  marginBottom: '24px',
+                  border: '1px solid #e5e7eb',
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)',
+                }}
+              >
+                <Title level={3} style={{ marginTop: 0, marginBottom: '24px', color: '#1f2937' }}>
+                  📚 학습 방법
+                </Title>
+                <ol style={{ fontSize: '1rem', paddingLeft: '24px', color: '#4b5563' }}>
+                  <li style={{ marginBottom: '12px', paddingLeft: '8px' }}>
+                    <strong style={{ color: '#1f2937' }}>왼쪽 메뉴에서 단계 선택</strong> - 학습하고 싶은 단계를 클릭하세요
+                  </li>
+                  <li style={{ marginBottom: '12px', paddingLeft: '8px' }}>
+                    <strong style={{ color: '#1f2937' }}>화면에서 예제 확인</strong> - 각 단계의 예제들이 실제로 실행되는 것을 확인하세요
+                  </li>
+                  <li style={{ marginBottom: '12px', paddingLeft: '8px' }}>
+                    <strong style={{ color: '#1f2937' }}>코드 읽기</strong> - VS Code에서 <code>src/lessons/</code> 폴더의 파일을 열어 코드를 읽으세요
+                  </li>
+                  <li style={{ marginBottom: '12px', paddingLeft: '8px' }}>
+                    <strong style={{ color: '#1f2937' }}>코드 수정</strong> - 파일을 수정하면 브라우저에서 자동으로 업데이트됩니다 (Hot Reload)
+                  </li>
+                  <li style={{ marginBottom: '0', paddingLeft: '8px' }}>
+                    <strong style={{ color: '#1f2937' }}>연습 문제 풀기</strong> - 각 파일 하단의 TODO 부분을 채워보세요
+                  </li>
+                </ol>
+              </div>
 
-                <p style={{ marginTop: '16px' }}><strong>2단계: React + TypeScript</strong></p>
-                <ul>
-                  <li>Step 2: React 기초 (컴포넌트, Props, 이벤트)</li>
-                  <li>Step 4: Hooks & TypeScript (useState, useEffect, useRef, etc.)</li>
-                </ul>
+              <div
+                style={{
+                  padding: '32px',
+                  background: 'white',
+                  borderRadius: '12px',
+                  marginBottom: '24px',
+                  border: '1px solid #e5e7eb',
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)',
+                }}
+              >
+                <Title level={3} style={{ marginTop: 0, marginBottom: '24px', color: '#1f2937' }}>
+                  🎓 추천 학습 순서
+                </Title>
+                <div
+                  style={{
+                    padding: '24px',
+                    background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
+                    borderRadius: '10px',
+                    border: '1px solid #93c5fd',
+                  }}
+                >
+                  <div style={{ marginBottom: '24px' }}>
+                    <p style={{ fontWeight: 600, fontSize: '1.05rem', marginBottom: '12px', color: '#1e40af' }}>
+                      1단계: TypeScript 기초
+                    </p>
+                    <ul style={{ marginLeft: '20px', color: '#1f2937' }}>
+                      <li>Step 1-1: 기본 타입 (string, number, boolean, array, object)</li>
+                      <li>Step 1-2: Interface (객체 구조 정의)</li>
+                      <li>Step 1-3: Type Alias (Union, Intersection)</li>
+                      <li>Step 3: 고급 타입 (Generics, Utility Types)</li>
+                    </ul>
+                  </div>
 
-                <p style={{ marginTop: '16px' }}><strong>3단계: 실전 프로젝트</strong></p>
-                <ul>
-                  <li>Step 5: Todo 앱 (상태 관리, CRUD)</li>
-                  <li>Step 5: API 연동 (fetch, 에러 처리, 페이지네이션)</li>
+                  <div style={{ marginBottom: '24px' }}>
+                    <p style={{ fontWeight: 600, fontSize: '1.05rem', marginBottom: '12px', color: '#1e40af' }}>
+                      2단계: React + TypeScript
+                    </p>
+                    <ul style={{ marginLeft: '20px', color: '#1f2937' }}>
+                      <li>Step 2: React 기초 (컴포넌트, Props, 이벤트)</li>
+                      <li>Step 4: Hooks & TypeScript (useState, useEffect, useRef, etc.)</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p style={{ fontWeight: 600, fontSize: '1.05rem', marginBottom: '12px', color: '#1e40af' }}>
+                      3단계: 실전 프로젝트
+                    </p>
+                    <ul style={{ marginLeft: '20px', color: '#1f2937', marginBottom: 0 }}>
+                      <li>Step 5: Todo 앱 (상태 관리, CRUD)</li>
+                      <li>Step 5: API 연동 (fetch, 에러 처리, 페이지네이션)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  padding: '32px',
+                  background: 'white',
+                  borderRadius: '12px',
+                  marginBottom: '24px',
+                  border: '1px solid #e5e7eb',
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)',
+                }}
+              >
+                <Title level={3} style={{ marginTop: 0, marginBottom: '20px', color: '#1f2937' }}>
+                  💡 학습 팁
+                </Title>
+                <ul style={{ fontSize: '1rem', marginLeft: '20px', color: '#4b5563' }}>
+                  <li style={{ marginBottom: '10px' }}>브라우저 개발자 도구(F12)를 열어서 콘솔 메시지를 확인하세요</li>
+                  <li style={{ marginBottom: '10px' }}>TypeScript 오류가 있으면 VS Code와 브라우저에서 모두 표시됩니다</li>
+                  <li style={{ marginBottom: '10px' }}>
+                    원본 파일(<code>../ts-learning</code>)은 수정되지 않으며, 이 프로젝트의 파일만 수정됩니다
+                  </li>
+                  <li style={{ marginBottom: 0 }}>파일을 수정하면 브라우저가 자동으로 새로고침됩니다</li>
                 </ul>
               </div>
 
-              <Title level={3} style={{ marginTop: '32px' }}>💡 팁</Title>
-              <ul style={{ fontSize: '16px' }}>
-                <li>브라우저 개발자 도구(F12)를 열어서 콘솔 메시지를 확인하세요</li>
-                <li>TypeScript 오류가 있으면 VS Code와 브라우저에서 모두 표시됩니다</li>
-                <li>원본 파일(<code>../ts-learning</code>)은 수정되지 않으며, 이 프로젝트의 파일만 수정됩니다</li>
-                <li>파일을 수정하면 브라우저가 자동으로 새로고침됩니다</li>
-              </ul>
-
-              <div style={{ marginTop: '40px', padding: '20px', background: '#fff8e6', borderRadius: '8px', borderLeft: '4px solid #faad14' }}>
-                <Title level={4}>🚀 시작하기</Title>
-                <p>왼쪽 사이드바에서 <strong>"기초 학습 → Step 1-1: 기본 타입"</strong>을 선택하여 학습을 시작하세요!</p>
+              <div
+                style={{
+                  padding: '32px',
+                  background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+                  borderRadius: '12px',
+                  border: '2px solid #f59e0b',
+                  boxShadow: '0 10px 15px -3px rgb(245 158 11 / 0.2)',
+                }}
+              >
+                <Title level={3} style={{ marginTop: 0, marginBottom: '16px', color: '#92400e' }}>
+                  🚀 시작하기
+                </Title>
+                <p style={{ fontSize: '1.05rem', marginBottom: 0, color: '#78350f' }}>
+                  왼쪽 사이드바에서 <strong>"기초 학습 → Step 1-1: 기본 타입"</strong>을 선택하여 학습을 시작하세요!
+                </p>
               </div>
             </div>
           </div>
@@ -130,42 +242,88 @@ function App() {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh', background: '#f8fafc' }}>
       <Sider
-        width={280}
+        collapsible
+        collapsed={collapsed}
+        onCollapse={setCollapsed}
+        width={360}
+        collapsedWidth={80}
         style={{
-          background: '#fff',
-          boxShadow: '2px 0 8px rgba(0,0,0,0.1)',
+          background: 'linear-gradient(180deg, #ffffff 0%, #f9fafb 100%)',
+          boxShadow: '2px 0 12px rgba(0,0,0,0.08)',
+          borderRight: '1px solid #e5e7eb',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100vh',
         }}
       >
-        <div style={{ padding: '16px', textAlign: 'center', borderBottom: '1px solid #f0f0f0' }}>
-          <Title level={4} style={{ margin: 0 }}>
-            🎓 TS Learning
-          </Title>
+        <div
+          style={{
+            padding: collapsed ? '20px 10px' : '20px 24px',
+            textAlign: collapsed ? 'center' : 'left',
+            borderBottom: '1px solid #e5e7eb',
+            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+            flexShrink: 0,
+            transition: 'all 0.2s',
+          }}
+        >
+          {collapsed ? (
+            <div style={{ fontSize: '24px' }}>🎓</div>
+          ) : (
+            <>
+              <Title level={4} style={{ margin: 0, color: 'white', fontWeight: 700 }}>
+                🎓 TS Learning
+              </Title>
+              <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.9)', marginTop: '6px' }}>
+                TypeScript + React
+              </div>
+            </>
+          )}
         </div>
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={['welcome']}
-          defaultOpenKeys={['basics']}
-          items={menuItems}
-          onClick={({ key }) => setSelectedLesson(key)}
-          style={{ borderRight: 0, height: 'calc(100vh - 73px)', overflowY: 'auto' }}
-        />
+        <div style={{ flex: 1, overflow: 'hidden' }}>
+          <Menu
+            mode="inline"
+            defaultSelectedKeys={['welcome']}
+            defaultOpenKeys={collapsed ? [] : ['basics']}
+            inlineCollapsed={collapsed}
+            items={menuItems}
+            onClick={({ key }) => setSelectedLesson(key)}
+            style={{
+              borderRight: 0,
+              height: '100%',
+              overflowY: 'auto',
+              background: 'transparent',
+              padding: collapsed ? '12px 8px' : '12px 16px',
+            }}
+          />
+        </div>
       </Sider>
       <Layout>
-        <Header style={{ background: '#fff', padding: '0 24px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-          <Title level={3} style={{ margin: '16px 0' }}>
+        <Header
+          style={{
+            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+            padding: '0 32px',
+            boxShadow: '0 4px 12px rgba(99, 102, 241, 0.15)',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Title level={3} style={{ margin: 0, color: 'white', fontWeight: 600 }}>
             React + TypeScript 학습
           </Title>
         </Header>
         <Content
           style={{
-            margin: '0',
-            padding: '0',
-            background: '#fff',
+            margin: '24px',
+            padding: '32px',
+            background: 'white',
             minHeight: 280,
             overflowY: 'auto',
-            height: 'calc(100vh - 64px)',
+            height: 'calc(100vh - 112px)',
+            borderRadius: '12px',
+            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
           }}
         >
           {renderLesson()}
