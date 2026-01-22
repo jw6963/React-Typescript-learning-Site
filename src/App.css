@@ -314,6 +314,58 @@ code {
   background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-color) 100%) !important;
 }
 
+/* 다크 모드 메뉴 스타일 */
+[data-theme="dark"] .ant-menu-item:hover,
+[data-theme="dark"] .ant-menu-submenu-title:hover {
+  background: rgba(51, 65, 85, 0.6) !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .ant-menu-item-selected {
+  background: linear-gradient(135deg, #334155 0%, #1e293b 100%) !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .ant-menu-item-selected:hover {
+  background: linear-gradient(135deg, #475569 0%, #334155 100%) !important;
+  color: #f1f5f9 !important;
+}
+
+/* 다크모드 메뉴 아이콘 색상 */
+[data-theme="dark"] .ant-menu-item .anticon,
+[data-theme="dark"] .ant-menu-submenu-title .anticon {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .ant-menu-item-selected .anticon,
+[data-theme="dark"] .ant-menu-item:hover .anticon,
+[data-theme="dark"] .ant-menu-submenu-title:hover .anticon {
+  color: #e2e8f0 !important;
+}
+
+/* 다크모드 메뉴 기본 텍스트 색상 */
+[data-theme="dark"] .ant-menu-item,
+[data-theme="dark"] .ant-menu-submenu-title {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .ant-menu-item .ant-menu-title-content,
+[data-theme="dark"] .ant-menu-submenu-title .ant-menu-title-content {
+  color: #94a3b8 !important;
+}
+
+/* 다크모드 체크마크 아이콘 */
+[data-theme="dark"] .ant-menu-item .anticon-check-circle,
+[data-theme="dark"] .ant-menu-submenu .anticon-check-circle {
+  color: #52c41a !important;
+}
+
+/* 다크모드 사이드바 토글 버튼 */
+[data-theme="dark"] .ant-layout-sider-trigger {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+  border-top: 1px solid #303030 !important;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .lesson-section,

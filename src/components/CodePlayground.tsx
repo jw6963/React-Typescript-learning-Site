@@ -1,28 +1,52 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import { Button, Card, Space, Alert } from 'antd';
-import { PlayCircleOutlined, ReloadOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { PlayCircleOutlined, ReloadOutlined, EyeOutlined, EyeInvisibleOutlined, SaveOutlined } from '@ant-design/icons';
 import * as ts from 'typescript';
 import type { editor } from 'monaco-editor';
+import { useStore } from '../store/useStore';
 
 interface CodePlaygroundProps {
   title: string;
   defaultCode: string;
   solution?: string;  // 정답 코드 (선택적)
   height?: string;
+  lessonKey?: string; // 레슨 식별자 (저장용)
 }
 
 // 고유한 파일 ID 생성
 let fileIdCounter = 0;
 
-export function CodePlayground({ title, defaultCode, solution, height = '300px' }: CodePlaygroundProps) {
-  const [code, setCode] = useState(defaultCode);
+export function CodePlayground({ title, defaultCode, solution, height = '300px', lessonKey }: CodePlaygroundProps) {
+  // Zustand store
+  const theme = useStore((state) => state.theme);
+  const saveCode = useStore((state) => state.saveCode);
+  const getSavedCode = useStore((state) => state.getSavedCode);
+  const clearSavedCode = useStore((state) => state.clearSavedCode);
+
+  // 저장된 코드가 있으면 불러오기, 없으면 defaultCode 사용
+  const initialCode = lessonKey ? (getSavedCode(lessonKey, title) || defaultCode) : defaultCode;
+
+  const [code, setCode] = useState(initialCode);
   const [output, setOutput] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [showingSolution, setShowingSolution] = useState(false);
-  const [userEditedCode, setUserEditedCode] = useState<string>(defaultCode); // 사용자가 편집한 코드 저장
+  const [userEditedCode, setUserEditedCode] = useState<string>(initialCode); // 사용자가 편집한 코드 저장
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const filePathRef = useRef(`file:///playground-${fileIdCounter++}.ts`);
+
+  // 코드가 변경될 때마다 자동 저장 (디바운스 적용)
+  useEffect(() => {
+    if (!lessonKey || showingSolution) return;
+
+    const timer = setTimeout(() => {
+      if (code !== defaultCode) {
+        saveCode(lessonKey, title, code);
+      }
+    }, 1000); // 1초 디바운스
+
+    return () => clearTimeout(timer);
+  }, [code, lessonKey, title, saveCode, defaultCode, showingSolution]);
 
   const handleRun = async () => {
     setOutput('');
@@ -173,6 +197,11 @@ export function CodePlayground({ title, defaultCode, solution, height = '300px' 
     setOutput('');
     setError('');
     setShowingSolution(false);
+
+    // 저장된 코드도 삭제
+    if (lessonKey) {
+      clearSavedCode(lessonKey, title);
+    }
   };
 
   const handleToggleSolution = () => {
@@ -195,7 +224,7 @@ export function CodePlayground({ title, defaultCode, solution, height = '300px' 
   return (
     <Card
       title={
-        <span>
+        <span style={{ color: theme === 'dark' ? '#e5e5e5' : 'inherit' }}>
           {title}
           {showingSolution && <span style={{ marginLeft: 8, color: '#52c41a' }}>✅ 정답</span>}
         </span>
@@ -229,10 +258,18 @@ export function CodePlayground({ title, defaultCode, solution, height = '300px' 
           </Button>
         </Space>
       }
-      style={{ marginBottom: 16 }}
+      style={{
+        marginBottom: 16,
+        background: theme === 'dark' ? '#262626' : 'white',
+        borderColor: theme === 'dark' ? '#303030' : '#d9d9d9',
+      }}
     >
       <Space direction="vertical" style={{ width: '100%' }} size="middle">
-        <div style={{ border: '1px solid #d9d9d9', borderRadius: '4px', overflow: 'hidden' }}>
+        <div style={{
+          border: theme === 'dark' ? '1px solid #303030' : '1px solid #d9d9d9',
+          borderRadius: '4px',
+          overflow: 'hidden'
+        }}>
           <Editor
             height={height}
             defaultLanguage="typescript"
@@ -272,7 +309,7 @@ export function CodePlayground({ title, defaultCode, solution, height = '300px' 
                 noSyntaxValidation: false,
               });
             }}
-            theme="vs-light"
+            theme={theme === 'dark' ? 'vs-dark' : 'vs-light'}
             options={{
               minimap: { enabled: false },
               fontSize: 14,

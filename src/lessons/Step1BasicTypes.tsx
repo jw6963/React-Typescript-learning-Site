@@ -157,6 +157,7 @@ export default function Step1BasicTypes() {
 
         <CodePlayground
           title="예제 1: 기본 타입 연습"
+          lessonKey="step1-1"
           defaultCode={`// 기본 타입 선언하기
 let username: string = "홍길동";
 let age: number = 25;
@@ -174,6 +175,7 @@ console.log("변경된 이름:", username);`}
 
         <CodePlayground
           title="예제 2: 배열 다루기"
+          lessonKey="step1-1"
           defaultCode={`// 배열 선언
 let numbers: number[] = [1, 2, 3, 4, 5];
 let names: string[] = ["김", "이", "박"];
@@ -193,6 +195,7 @@ console.log("추가 후:", numbers);`}
 
         <CodePlayground
           title="예제 3: 함수 만들기"
+          lessonKey="step1-1"
           defaultCode={`// 함수 타입 지정
 function add(a: number, b: number): number {
   return a + b;
@@ -213,11 +216,12 @@ console.log("4 × 5 =", multiply(4, 5));`}
 
         <CodePlayground
           title="연습 문제: 직접 풀어보세요!"
+          lessonKey="step1-1"
           defaultCode={`// TODO 1: greet 함수 완성하기
 // 이름을 받아서 "안녕하세요, [이름]님!" 반환
 function greet(name: string): string {
   // 여기에 코드 작성
-  return "";
+  return \`\`;
 }
 
 // TODO 2: 학생 객체 만들기
