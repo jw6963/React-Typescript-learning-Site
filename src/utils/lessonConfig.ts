@@ -10,6 +10,7 @@ export const LESSONS: LessonInfo[] = [
   { key: 'step4', label: 'Step 4: Hooks & TypeScript', order: 6 },
   { key: 'step5-todo', label: 'Step 5: Todo 앱', order: 7 },
   { key: 'step5-api', label: 'Step 5: API 연동', order: 8 },
+  { key: 'ebook', label: 'E-Book: TS 학습 가이드', order: 9 },
 ];
 
 // 레슨 키로 정보 찾기

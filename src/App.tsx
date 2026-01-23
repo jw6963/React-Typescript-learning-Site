@@ -15,6 +15,7 @@ import Step2ReactBasics from './lessons/step2-react-basics';
 import Step4HooksTypescript from './lessons/step4-hooks-typescript';
 import Step5ProjectTodo from './lessons/step5-project-todo';
 import Step5ApiIntegration from './lessons/step5-api-integration';
+import EBook from './lessons/ebook';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -162,6 +163,7 @@ function App() {
       children: [
         { key: 'step5-todo', label: createLabel('step5-todo', 'Step 5: Todo 앱') },
         { key: 'step5-api', label: createLabel('step5-api', 'Step 5: API 연동') },
+        { key: 'ebook', label: createLabel('ebook', 'E-Book: TS 학습 가이드') },
       ],
     },
   ];
@@ -184,6 +186,8 @@ function App() {
         return <Step5ProjectTodo />;
       case 'step5-api':
         return <Step5ApiIntegration />;
+      case 'ebook':
+        return <EBook />;
       default:
         return (
           <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
